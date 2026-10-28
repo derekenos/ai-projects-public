@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENDO</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; color: #f3efe6; overflow: hidden;
+    font: 13px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; cursor: pointer; }
+  #hud { position: fixed; left: 16px; bottom: 16px; padding: 10px 12px; background: rgba(10,10,14,0.55);
+    border-radius: 8px; transition: opacity 0.8s; pointer-events: none; max-width: calc(100% - 64px); }
+  #hud b { font-size: 15px; }
+  #hud .k { color: #ffcf5a; font-size: 11px; }
+  #hud .pad { color: #aaa; font-size: 11px; margin-top: 2px; }
+  .meter { display: inline-block; width: 60px; height: 6px; background: #333; border-radius: 3px; vertical-align: middle; overflow: hidden; }
+  .meter i { display: block; height: 100%; background: #7fdc8a; }
+  [hidden] { display: none !important; }
+  #overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.75); cursor: pointer; text-align: center; }
+  #overlay h2 { font: 300 40px Georgia, serif; letter-spacing: 0.3em; margin: 0 0 8px; }
+  #overlay p { color: #bbb; margin: 4px 0; }
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div id="hud"></div>
+<div id="overlay"><div>
+  <h2>ENDO</h2>
+  <p>Every kick drum moves the story forward.</p>
+  <p>Click to begin. Then press <b>Start</b> / <b>Enter</b> for the demo beat,<br><b>X</b> / <b>C</b> to listen to a microphone, or play kicks on <b>A</b> / <b>Space</b> or MIDI.</p>
+</div></div>
+<script src="../common/input.js"></script>
+<script src="../common/kit.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
