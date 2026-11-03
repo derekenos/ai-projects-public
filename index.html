@@ -1,74 +1,389 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Projects</title>
+    <meta name="description" content="A selection of games and sound toys that Claude built.">
     <style>
+     :root {
+       --bg: #121417;
+       --surface: #1b1e23;
+       --surface-2: #23272e;
+       --border: #2e333b;
+       --text: #e9e6df;
+       --muted: #9a9ea6;
+       --accent: #f4c430;
+       --accent-2: #ff7a59;
+       --radius: 14px;
+       --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+       --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+     }
+
+     * { box-sizing: border-box; }
+
      body {
-       padding-left: 1rem;
-       background-color: #f7f7f7;
+       margin: 0;
+       background: var(--bg);
+       color: var(--text);
+       font-family: var(--font);
+       line-height: 1.5;
+       -webkit-font-smoothing: antialiased;
      }
 
-     table {
-       border: solid #888 1px;
+     a { color: var(--accent); }
+
+     .wrap {
+       max-width: 1180px;
+       margin: 0 auto;
+       padding: 0 20px;
      }
 
-     tr:nth-child(even) {
-       background-color: #eef;
+     /* Header */
+
+     header {
+       padding: 72px 0 40px;
+       background:
+         radial-gradient(900px 300px at 15% 0%, rgba(244, 196, 48, 0.12), transparent 70%),
+         radial-gradient(700px 260px at 90% 10%, rgba(255, 122, 89, 0.10), transparent 70%);
      }
 
-     td {
-       padding: 0.5rem;
+     .eyebrow {
+       font-family: var(--mono);
+       font-size: 0.8rem;
+       letter-spacing: 0.14em;
+       text-transform: uppercase;
+       color: var(--muted);
+       margin: 0 0 12px;
      }
 
-     td:first-child {
-       text-align: right;
-       padding-right: 1rem;
+     h1 {
+       font-size: clamp(2.6rem, 7vw, 4.5rem);
+       line-height: 1;
+       letter-spacing: -0.03em;
+       margin: 0 0 18px;
+     }
+
+     h1 span { color: var(--accent); }
+
+     .lede {
+       max-width: 46ch;
+       font-size: 1.15rem;
+       color: var(--muted);
+       margin: 0;
+     }
+
+     .lede strong { color: var(--text); font-weight: 600; }
+
+     nav.jump {
+       display: flex;
+       gap: 10px;
+       flex-wrap: wrap;
+       margin-top: 28px;
+     }
+
+     nav.jump a {
+       font-size: 0.9rem;
+       text-decoration: none;
+       color: var(--text);
+       padding: 7px 14px;
+       border: 1px solid var(--border);
+       border-radius: 999px;
+       background: var(--surface);
+     }
+
+     nav.jump a:hover { border-color: var(--accent); }
+
+     /* Sections */
+
+     section { padding: 28px 0 40px; }
+
+     .section-head {
+       display: flex;
+       align-items: baseline;
+       justify-content: space-between;
+       gap: 16px;
+       border-bottom: 1px solid var(--border);
+       padding-bottom: 12px;
+       margin-bottom: 24px;
+     }
+
+     h2 {
+       font-size: 1.6rem;
+       letter-spacing: -0.01em;
+       margin: 0;
+     }
+
+     .section-head p {
+       margin: 0;
+       color: var(--muted);
+       font-size: 0.95rem;
+     }
+
+     .grid {
+       display: grid;
+       gap: 24px;
+       grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+     }
+
+     .grid.small {
+       grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+     }
+
+     /* Cards */
+
+     .card {
+       display: flex;
+       flex-direction: column;
+       background: var(--surface);
+       border: 1px solid var(--border);
+       border-radius: var(--radius);
+       overflow: hidden;
+       transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+     }
+
+     .card:hover {
+       transform: translateY(-3px);
+       border-color: #454b55;
+       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+     }
+
+     .shot {
+       position: relative;
+       display: block;
+       aspect-ratio: 16 / 9;
+       background: #000;
+       overflow: hidden;
+     }
+
+     .shot img {
+       position: absolute;
+       inset: 0;
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+       transition: opacity 0.45s ease, transform 0.6s ease;
+     }
+
+     .shot img + img { opacity: 0; }
+     .card:hover .shot img { transform: scale(1.02); }
+     .card:hover .shot img + img { opacity: 1; }
+
+     .shot .play {
+       position: absolute;
+       right: 12px;
+       bottom: 12px;
+       font-size: 0.8rem;
+       font-weight: 600;
+       color: #16181c;
+       background: var(--accent);
+       padding: 6px 12px;
+       border-radius: 999px;
+       opacity: 0;
+       transform: translateY(4px);
+       transition: opacity 0.2s ease, transform 0.2s ease;
+     }
+
+     .card:hover .play,
+     .shot:focus-visible .play { opacity: 1; transform: none; }
+
+     .body {
+       padding: 18px 20px 20px;
+       display: flex;
+       flex-direction: column;
+       gap: 8px;
+       flex: 1;
+     }
+
+     h3 {
+       font-size: 1.25rem;
+       margin: 0;
+       letter-spacing: -0.01em;
+     }
+
+     h3 a {
+       color: var(--text);
+       text-decoration: none;
+     }
+
+     h3 a:hover { color: var(--accent); }
+
+     .body p {
+       margin: 0;
+       color: var(--muted);
+     }
+
+     .tags {
+       display: flex;
+       flex-wrap: wrap;
+       gap: 6px;
+       margin-top: auto;
+       padding-top: 8px;
+     }
+
+     .tags span {
+       font-family: var(--mono);
+       font-size: 0.72rem;
+       color: var(--muted);
+       background: var(--surface-2);
+       border: 1px solid var(--border);
+       border-radius: 6px;
+       padding: 2px 8px;
+     }
+
+     .hint {
+       font-size: 0.8rem;
+       color: var(--muted);
+       margin: 0 0 20px;
+     }
+
+     footer {
+       border-top: 1px solid var(--border);
+       margin-top: 20px;
+       padding: 28px 0 48px;
+       color: var(--muted);
+       font-size: 0.9rem;
+     }
+
+     @media (hover: none) {
+       .shot .play { opacity: 1; transform: none; }
+     }
+
+     @media (prefers-reduced-motion: reduce) {
+       .card, .shot img, .shot .play { transition: none; }
+       .card:hover { transform: none; }
+       .card:hover .shot img { transform: none; }
      }
     </style>
   </head>
   <body>
-    <h1>AI Projects</h1>
-    <p>
-      A selection of projects that Claude built. Thank you Claude.
-    </p>
-    <h2>Games</h2>
-    <table cellspacing="0">
-      <tbody>
-        <tr>
-          <td><a href="crash-course/">Crash Course</a></td>
-          <td>NYSDOT-regulation-enforcing driving simulator</td>
-        </tr>
+    <header>
+      <div class="wrap">
+        <p class="eyebrow">Made with Claude</p>
+        <h1>AI <span>Projects</span></h1>
+        <p class="lede">
+          A selection of projects that Claude built. <strong>Thank you Claude.</strong>
+        </p>
+        <nav class="jump">
+          <a href="#games">Games</a>
+          <a href="#sound-toys">Sound Toys</a>
+        </nav>
+      </div>
+    </header>
 
-        <tr>
-          <td><a href="legacy-code-barry/">Legacy Code Barry</a></td>
-          <td>Software engineer loses job to AI</td>
-        </tr>
+    <main class="wrap">
+      <section id="games">
+        <div class="section-head">
+          <h2>Games</h2>
+          <p>Play in the browser · gamepad recommended</p>
+        </div>
 
-        <tr>
-          <td><a href="newos-arena/">Newo's Arena</a></td>
-          <td>Fight off Shrek-like creatures using a variety of weapons</td>
-        </tr>
+        <div class="grid">
+          <article class="card">
+            <a class="shot" href="crash-course/">
+              <img src="screenshots/crash-course-1.webp" alt="Driving a student-driver car down a tree-lined small-town street" loading="lazy">
+              <img src="screenshots/crash-course-2.webp" alt="Crash Course title menu with four road tests" loading="lazy">
+              <span class="play">Play ▸</span>
+            </a>
+            <div class="body">
+              <h3><a href="crash-course/">Crash Course</a></h3>
+              <p>NYSDOT-regulation-enforcing driving simulator</p>
+              <div class="tags"><span>3D</span><span>Driving</span><span>4 road tests</span></div>
+            </div>
+          </article>
 
-        <tr>
-          <td><a href="e-sport-legacy/">E-Sport Legacy</a></td>
-          <td>Football, Soccer, and Ping Pong</td>
-        </tr>
-      </tbody>
-    </table>
-    <h2>Sound Toys</h2>
-    <table cellspacing="0">
-      <tbody>
-        <tr>
-          <td><a href="sound-toys/beatbox/">Beatbox</a></td>
-          <td>Claude made <a href="https://derekenos.com/etc#voice-controlled-drum-sequencing">the concept</a> real</td>
-        </tr>
-        <tr>
-          <td><a href="sound-toys/wave-wheel/">Sequencer</a></td>
-          <td>Claude made <a href="https://derekenos.com/etc#wave-based-audio-sequencer">the concept</a> real</td>
-        </tr>
-        <tr>
-          <td><a href="sound-toys/endo/">ENDO</a></td>
-          <td>Claude made <a href="https://derekenos.com/etc#endo">the concept</a> real</td>
-        </tr>
-      </tbody>
-    </table>
+          <article class="card">
+            <a class="shot" href="legacy-code-barry/">
+              <img src="screenshots/legacy-code-barry-1.webp" alt="Barry standing in his one-bedroom Brooklyn apartment" loading="lazy">
+              <img src="screenshots/legacy-code-barry-2.webp" alt="Opening text: Brooklyn, October 2026" loading="lazy">
+              <span class="play">Play ▸</span>
+            </a>
+            <div class="body">
+              <h3><a href="legacy-code-barry/">Legacy Code Barry</a></h3>
+              <p>Software engineer loses job to AI</p>
+              <div class="tags"><span>2D</span><span>Adventure</span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <a class="shot" href="newos-arena/">
+              <img src="screenshots/newos-arena-1.webp" alt="A pumpkin-headed fighter facing the Org Horde on the title screen" loading="lazy">
+              <img src="screenshots/newos-arena-2.webp" alt="The arena floor at the start of level 1" loading="lazy">
+              <span class="play">Play ▸</span>
+            </a>
+            <div class="body">
+              <h3><a href="newos-arena/">Newo's Arena</a></h3>
+              <p>Fight off Shrek-like creatures using a variety of weapons</p>
+              <div class="tags"><span>3D</span><span>Action</span><span>Multiplayer</span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <a class="shot" href="e-sport-legacy/">
+              <img src="screenshots/e-sport-legacy-1.webp" alt="A floodlit stadium pitch at night: Legacy Arena" loading="lazy">
+              <img src="screenshots/e-sport-legacy-2.webp" alt="E-Sport Legacy logo over the pitch" loading="lazy">
+              <span class="play">Play ▸</span>
+            </a>
+            <div class="body">
+              <h3><a href="e-sport-legacy/">E-Sport Legacy</a></h3>
+              <p>Football, Soccer, and Ping Pong</p>
+              <div class="tags"><span>3D</span><span>Sports</span><span>Multiplayer</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="sound-toys">
+        <div class="section-head">
+          <h2>Sound Toys</h2>
+          <p>Ideas from <a href="https://derekenos.com/etc">derekenos.com/etc</a>, made real</p>
+        </div>
+
+        <div class="grid small">
+          <article class="card">
+            <a class="shot" href="sound-toys/beatbox/">
+              <img src="screenshots/beatbox-1.webp" alt="Beatbox: a recorded take quantized into kick hits on a grid" loading="lazy">
+              <span class="play">Open ▸</span>
+            </a>
+            <div class="body">
+              <h3><a href="sound-toys/beatbox/">Beatbox</a></h3>
+              <p>Claude made <a href="https://derekenos.com/etc#voice-controlled-drum-sequencing">the concept</a> real</p>
+              <div class="tags"><span>Microphone</span><span>Drums</span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <a class="shot" href="sound-toys/wave-wheel/">
+              <img src="screenshots/sequencer-1.webp" alt="Six colored waveform tracks triggering notes in the sequencer" loading="lazy">
+              <span class="play">Open ▸</span>
+            </a>
+            <div class="body">
+              <h3><a href="sound-toys/wave-wheel/">Sequencer</a></h3>
+              <p>Claude made <a href="https://derekenos.com/etc#wave-based-audio-sequencer">the concept</a> real</p>
+              <div class="tags"><span>Sequencer</span><span>Waves</span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <a class="shot" href="sound-toys/endo/">
+              <img src="screenshots/endo-1.webp" alt="A horse grazing in a green meadow under a pale sky" loading="lazy">
+              <img src="screenshots/endo-2.webp" alt="Traveling down a red, ribbed tunnel: the esophagus" loading="lazy">
+              <span class="play">Open ▸</span>
+            </a>
+            <div class="body">
+              <h3><a href="sound-toys/endo/">ENDO</a></h3>
+              <p>Claude made <a href="https://derekenos.com/etc#endo">the concept</a> real</p>
+              <div class="tags"><span>Kick-driven</span><span>Animation</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        Hover a screenshot to see another scene. Everything runs in the browser.
+      </div>
+    </footer>
   </body>
 </html>
