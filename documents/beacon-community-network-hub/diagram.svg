@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" role="img" aria-labelledby="t" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13">
+  <title id="t">Each house talks through its own hub; LoRa steps in when the internet drops</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#6b717b"/></marker>
+    <marker id="l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f4c430"/></marker>
+  </defs>
+  <rect width="760" height="520" fill="#121417"/>
+
+  <rect x="230" y="40" width="300" height="56" rx="8" fill="#1b1e23" stroke="#454b55"/>
+  <text x="380" y="64" text-anchor="middle" font-weight="600" fill="#e9e6df">Community server</text>
+  <text x="380" y="81" text-anchor="middle" font-size="11.5" fill="#9a9ea6">beaconny.net · transport node, directory</text>
+
+  <text x="400" y="132" font-size="11.5" fill="#9a9ea6">internet, outbound TCP</text>
+
+  <g id="house">
+    <rect x="24" y="170" width="340" height="310" rx="10" fill="#1b1e23" stroke="#2e333b"/>
+    <rect x="40" y="212" width="146" height="56" rx="8" fill="#23272e" stroke="#454b55"/>
+    <rect x="202" y="212" width="146" height="56" rx="8" fill="#23272e" stroke="#454b55"/>
+    <rect x="40" y="300" width="308" height="72" rx="8" fill="#f4c430" fill-opacity="0.12" stroke="#f4c430" stroke-width="2"/>
+    <rect x="121" y="404" width="146" height="56" rx="8" fill="#23272e" stroke="#454b55"/>
+    <g fill="none" stroke="#6b717b" stroke-width="1.25">
+      <path d="M113 268V300" marker-end="url(#a)"/>
+      <path d="M275 268V300" marker-end="url(#a)"/>
+      <path d="M194 372V404" marker-end="url(#a)"/>
+    </g>
+    <text x="113" y="236" text-anchor="middle" font-weight="600" fill="#e9e6df">Walkie-talkies</text>
+    <text x="113" y="252" text-anchor="middle" font-size="11.5" fill="#9a9ea6">ESP32, Wi-Fi</text>
+    <text x="275" y="236" text-anchor="middle" font-weight="600" fill="#e9e6df">Terminal</text>
+    <text x="275" y="252" text-anchor="middle" font-size="11.5" fill="#9a9ea6">any browser</text>
+    <text x="194" y="289" text-anchor="middle" font-size="11.5" fill="#9a9ea6">hub Wi-Fi</text>
+    <text x="194" y="324" text-anchor="middle" font-weight="600" fill="#e9e6df">Hub (Raspberry Pi)</text>
+    <text x="194" y="340" text-anchor="middle" font-size="11.5" fill="#e9e6df">Reticulum, nginx, web proxy</text>
+    <text x="194" y="356" text-anchor="middle" font-size="11.5" fill="#e9e6df">own access point, battery</text>
+    <text x="202" y="392" font-size="11.5" fill="#9a9ea6">USB</text>
+    <text x="194" y="428" text-anchor="middle" font-weight="600" fill="#e9e6df">RNode</text>
+    <text x="194" y="444" text-anchor="middle" font-size="11.5" fill="#9a9ea6">LoRa radio</text>
+  </g>
+  <use href="#house" x="372"/>
+  <text x="40" y="194" font-weight="600" fill="#e9e6df">House A</text>
+  <text x="412" y="194" font-weight="600" fill="#e9e6df">House B</text>
+
+  <g fill="none" stroke="#6b717b" stroke-width="1.25">
+    <path d="M370 96V336H348" marker-start="url(#a)" marker-end="url(#a)"/>
+    <path d="M390 96V336H412" marker-start="url(#a)" marker-end="url(#a)"/>
+  </g>
+  <path d="M267 432H493" fill="none" stroke="#f4c430" stroke-width="1.5" stroke-dasharray="5 4" marker-start="url(#l)" marker-end="url(#l)"/>
+  <text x="380" y="504" text-anchor="middle" font-size="11.5" fill="#9a9ea6">LoRa between RNodes, when the internet is down</text>
+</svg>

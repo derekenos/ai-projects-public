@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hub Design · Beacon Community Network</title>
+    <meta name="description" content="Design for neighborhood hub appliances that carry Beacon Community Network services over Reticulum, with LoRa radio when the internet is down.">
+    <style>
+     :root {
+       --bg: #121417;
+       --surface: #1b1e23;
+       --surface-2: #23272e;
+       --border: #2e333b;
+       --text: #e9e6df;
+       --muted: #9a9ea6;
+       --accent: #f4c430;
+       --radius: 14px;
+       --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+       --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+     }
+
+     * { box-sizing: border-box; }
+
+     body {
+       margin: 0;
+       background: var(--bg);
+       color: var(--text);
+       font-family: var(--font);
+       line-height: 1.6;
+       -webkit-font-smoothing: antialiased;
+     }
+
+     a { color: var(--accent); }
+
+     .wrap {
+       max-width: 780px;
+       margin: 0 auto;
+       padding: 0 20px;
+     }
+
+     header {
+       padding: 48px 0 28px;
+       background: radial-gradient(700px 260px at 15% 0%, rgba(244, 196, 48, 0.12), transparent 70%);
+     }
+
+     .back {
+       font-size: 0.9rem;
+       text-decoration: none;
+       color: var(--muted);
+     }
+
+     .back:hover { color: var(--accent); }
+
+     .eyebrow {
+       font-family: var(--mono);
+       font-size: 0.8rem;
+       letter-spacing: 0.14em;
+       text-transform: uppercase;
+       color: var(--muted);
+       margin: 28px 0 12px;
+     }
+
+     h1 {
+       font-size: clamp(2rem, 6vw, 3.2rem);
+       line-height: 1.05;
+       letter-spacing: -0.03em;
+       margin: 0 0 14px;
+     }
+
+     h1 span { color: var(--accent); }
+
+     .meta { color: var(--muted); font-size: 0.95rem; margin: 0; }
+
+     nav.toc {
+       margin: 28px 0 8px;
+       padding: 16px 20px;
+       background: var(--surface);
+       border: 1px solid var(--border);
+       border-radius: var(--radius);
+       font-size: 0.92rem;
+     }
+
+     nav.toc ol { margin: 6px 0 0; padding-left: 1.3em; columns: 2 220px; }
+     nav.toc a { color: var(--text); text-decoration: none; }
+     nav.toc a:hover { color: var(--accent); }
+
+     h2 {
+       font-size: 1.5rem;
+       letter-spacing: -0.01em;
+       margin: 48px 0 12px;
+       padding-bottom: 8px;
+       border-bottom: 1px solid var(--border);
+       scroll-margin-top: 16px;
+     }
+
+     h3 { font-size: 1.1rem; margin: 28px 0 8px; }
+
+     p, li { color: #d3d0c9; }
+     strong { color: var(--text); }
+     ul, ol { padding-left: 1.3em; }
+     li { margin: 6px 0; }
+     li::marker { color: var(--muted); }
+
+     ul.check { list-style: none; padding-left: 0; }
+     ul.check li { padding-left: 1.7em; position: relative; }
+     ul.check li::before {
+       content: "";
+       position: absolute;
+       left: 0;
+       top: 0.35em;
+       width: 0.95em;
+       height: 0.95em;
+       border: 1.5px solid var(--muted);
+       border-radius: 4px;
+     }
+
+     code {
+       font-family: var(--mono);
+       font-size: 0.86em;
+       background: var(--surface-2);
+       border: 1px solid var(--border);
+       border-radius: 5px;
+       padding: 1px 5px;
+       overflow-wrap: anywhere;
+     }
+
+     .table-wrap { overflow-x: auto; margin: 16px 0; }
+
+     table {
+       width: 100%;
+       border-collapse: collapse;
+       font-size: 0.92rem;
+     }
+
+     th, td {
+       text-align: left;
+       vertical-align: top;
+       padding: 10px 12px;
+       border-bottom: 1px solid var(--border);
+     }
+
+     th {
+       color: var(--muted);
+       font-weight: 600;
+       font-size: 0.8rem;
+       text-transform: uppercase;
+       letter-spacing: 0.06em;
+     }
+
+     td { color: #d3d0c9; }
+     td:first-child { color: var(--text); font-weight: 500; }
+
+     figure {
+       margin: 20px 0;
+       background: var(--surface);
+       border: 1px solid var(--border);
+       border-radius: var(--radius);
+       overflow: hidden;
+     }
+
+     figure img { display: block; width: 100%; height: auto; }
+
+     figcaption {
+       padding: 10px 16px;
+       color: var(--muted);
+       font-size: 0.85rem;
+       border-top: 1px solid var(--border);
+     }
+
+     footer {
+       border-top: 1px solid var(--border);
+       margin-top: 48px;
+       padding: 28px 0 48px;
+       color: var(--muted);
+       font-size: 0.9rem;
+     }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <a class="back" href="../../">← AI Projects</a>
+        <p class="eyebrow">Design document</p>
+        <h1>Beacon Community Network: <span>Hub Design</span></h1>
+        <p class="meta">Derek Enos, with Claude · November 2026</p>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <nav class="toc" aria-label="Contents">
+        <strong>Contents</strong>
+        <ol>
+          <li><a href="#purpose">Purpose and principles</a></li>
+          <li><a href="#overview">System overview</a></li>
+          <li><a href="#hardware">Hub hardware</a></li>
+          <li><a href="#rnode-display">RNode display as a status screen</a></li>
+          <li><a href="#networking">Networking</a></li>
+          <li><a href="#walkie-talkies">Walkie-talkies and voice</a></li>
+          <li><a href="#voicemail">Hub voicemail</a></li>
+          <li><a href="#websites">Household websites</a></li>
+          <li><a href="#terminal">Terminal</a></li>
+          <li><a href="#stewardship">Stewardship</a></li>
+          <li><a href="#security">Security posture</a></li>
+          <li><a href="#risks">Risks, limits and open questions</a></li>
+          <li><a href="#build-order">Suggested build order</a></li>
+          <li><a href="#sources">Sources</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="purpose">Purpose and principles</h2>
+      <p>Each participating house runs one identical hub appliance that links its household's devices to the neighborhood over Reticulum. In normal times it rides the home internet connection; in an outage it falls back to LoRa radio. Volunteer stewards host the hubs in their homes for the good of the community.</p>
+      <p>The hubs are part of the <a href="https://beaconny.net/">Beacon Community Network</a>, the community-run digital services platform for Beacon, NY. Today its services run on computers in Beacon: the <a href="http://future.beaconny.net">Beacon Future Forum</a>, shared <a href="https://files.beaconny.net">Files</a>, the <a href="https://govdocs.beaconny.net/search/index.html?q=">City of Beacon Document Archive</a>, <a href="https://git.beaconny.net/">Gitlab</a> and a <a href="https://knowledge.beaconny.net/?lang=eng">Kiwix</a> library of Wikipedia, Project Gutenberg and Stack Overflow. The hubs extend that to computers in Beacon homes, so those services and new household ones keep working street by street when the internet doesn't.</p>
+      <ul>
+        <li><strong>The community server</strong> in this document is the existing beaconny.net infrastructure, acting as the Reticulum transport node and hosting the directory.</li>
+        <li><strong>The offline library and archives</strong> on each hub are synced copies of the network's existing Kiwix, Files and document archive.</li>
+        <li><strong>Coordination</strong> for stewards happens in the Beacon Future Forum.</li>
+        <li><strong>Chapters:</strong> neighborhoods join as local chapters with their own identity. The <strong>Tree Streets Radio Club</strong> is the pilot chapter; later chapters can form the same way in other parts of town.</li>
+      </ul>
+      <p>The design follows a few principles:</p>
+      <ul>
+        <li><strong>Wi-Fi for adoption, radio for resilience.</strong> Everyday use runs over Wi-Fi and the internet, where it feels fast and fun. LoRa is the quiet safety net underneath.</li>
+        <li><strong>Appliance, not project.</strong> One standard image and one standard bill of materials, so every steward's box behaves the same way and one guide covers them all.</li>
+        <li><strong>Simple enough for non-technical stewards.</strong> Services start on boot, failures are visible, and the care card fits on one page.</li>
+        <li><strong>No router configuration.</strong> Hubs only make outbound connections, so nothing has to be opened or forwarded on anyone's home router.</li>
+        <li><strong>Repairable by the next generation.</strong> Prefer mature, open, well-documented parts that will still be fixable years from now.</li>
+      </ul>
+
+      <h2 id="overview">System overview</h2>
+      <p>Inside each house, walkie-talkies and terminals connect only to the hub's own Wi-Fi access point. Between houses, hubs connect out to the community server in normal times and fall back to LoRa between their RNodes when the internet drops.</p>
+      <figure>
+        <img src="diagram.svg" width="760" height="520" alt="Two houses, each with walkie-talkies and a browser terminal connected over the hub's Wi-Fi to a Raspberry Pi hub with an RNode on USB. Both hubs connect over the internet to the beaconny.net community server, and the two RNodes link directly over LoRa when the internet is down.">
+        <figcaption>Household layout and links between houses</figcaption>
+      </figure>
+      <p>The hub is the only part that speaks Reticulum; everything else in the house is a plain Wi-Fi client.</p>
+
+      <h2 id="hardware">Hub hardware</h2>
+      <p>The hub is a headless Raspberry Pi with an RNode for LoRa, a second Wi-Fi radio, a clock, an SSD and a battery. Any recent Pi the community already has can be repurposed; one 64-bit image that runs across the supported models keeps the setup and the guide the same in every house.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Part</th><th>Role</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Raspberry Pi (3B+ or newer)</td><td>Runs Reticulum, nginx, the proxy, MeshChat and Kiwix</td><td>Pi 4 or 5 with 2 GB or more is the comfortable choice; a Pi 3B+ (1 GB) suits a lighter hub without Kiwix. Use a heatsink case for always-on use.</td></tr>
+            <tr><td>RNode (ESP32 + LoRa)</td><td>Radio link between houses when the internet is down</td><td>On a long USB cable or coax run so the antenna sits high, near a window</td></tr>
+            <tr><td>USB Wi-Fi dongle</td><td>Second radio, so the hub can join home Wi-Fi and run its own access point at once</td><td>Choose a chipset with reliable AP-mode support on Linux</td></tr>
+            <tr><td>RTC or GPS module</td><td>Keeps correct time without internet (NTP)</td><td>GPS also gives every hub a shared time source</td></tr>
+            <tr><td>USB SSD</td><td>Boot and storage drive</td><td>Far more robust than an SD card against wear and sudden power loss</td></tr>
+            <tr><td>Battery / small UPS</td><td>Keeps the hub, RNode and access point running through power outages</td><td>Size it for the hub plus RNode; the home router is optional</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The hub never needs its own screen. Any device in the house with a browser is a terminal (see <a href="#terminal">Terminal</a>).</p>
+
+      <h2 id="rnode-display">RNode display as a hub status screen</h2>
+      <p>Many RNode boards have a small built-in OLED, and stock RNode firmware already lets the connected Pi draw on part of it. That gives the hub a simple status screen for free, with no extra display hardware.</p>
+      <ul>
+        <li><strong>What stock firmware allows:</strong> an "external framebuffer", a <strong>64×64 monochrome region</strong> the host writes over serial. <code>CMD_FB_EXT</code> (0x41) switches it on or off, and <code>CMD_FB_WRITE</code> (0x43) sends the image: 512 bytes, 64 lines of 8 bytes, most significant bit first.</li>
+        <li><strong>Already supported in Reticulum:</strong> <code>RNodeInterface</code> has <code>enable_external_framebuffer()</code>, <code>disable_external_framebuffer()</code> and <code>display_image()</code>. The Columba app uses this to show its logo on the RNode when it connects.</li>
+        <li><strong>What the hub could show:</strong> link status (internet up, radio mode), a battery gauge, a new-message or voicemail count, and the hub's identicon so stewards can tell boxes apart. The Pi renders each frame with Pillow and pushes it when status changes.</li>
+        <li><strong>One serial owner:</strong> the process that runs the RNode interface owns its serial port, so display updates must come from inside the hub's Reticulum service, not a separate script.</li>
+        <li><strong>Full-screen control needs custom firmware:</strong> the firmware keeps the rest of the screen for its own radio status. RNode firmware is open source (dual GPL and commercial license), so a fork could hand the whole display to the host. The trade-off is maintaining that fork, or proposing full-screen control upstream as a configuration option.</li>
+      </ul>
+
+      <h2 id="networking">Networking</h2>
+      <p>Every hub keeps two Reticulum interfaces: a TCP link to the community server for normal times, and an RNode LoRa interface for outages. Because the TCP link is outbound, it passes through home NAT with no router changes.</p>
+      <ul>
+        <li><strong>Normal times:</strong> hubs connect out over the internet to the community server, which acts as a Reticulum transport node. Traffic between houses is routed by destination hash, not IP address.</li>
+        <li><strong>Outage:</strong> when the internet link drops, traffic moves to LoRa between neighboring hubs. Addresses stay the same, so links and bookmarks keep working.</li>
+        <li><strong>Household side:</strong> the hub runs its own access point (via the USB dongle) for walkie-talkies and terminals. That way a dead home router doesn't cut households off from their own hub.</li>
+        <li><strong>Keeping LoRa quiet in normal times:</strong> Reticulum routes over whatever interfaces are up and announces on all of them. Two options to test: bring the RNode interface up by script when the internet link fails, or keep it up with a restrictive interface mode and low announce rate.</li>
+        <li><strong>HTTP stays off LoRa:</strong> only text, Micron pages and short voice clips should cross the radio. Full web pages are restricted to fast links (see <a href="#websites">Household websites</a>).</li>
+      </ul>
+      <h3>Power outage behavior</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>What fails</th><th>What still works</th></tr></thead>
+          <tbody>
+            <tr><td>Internet only</td><td>Everything, over LoRa, at reduced speed</td></tr>
+            <tr><td>Grid power, hub on battery</td><td>Hub, access point, walkie-talkies, LoRa; home router and internet likely down</td></tr>
+            <tr><td>Hub battery exhausted</td><td>Nothing in that house; neighbors route around it</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="walkie-talkies">Walkie-talkies and voice</h2>
+      <p>The handhelds stay simple ESP32 Wi-Fi clients that stream audio to their own house's hub; the hub does all the Reticulum work. This keeps them cheap, long-lasting on battery and kid-proof.</p>
+      <ul>
+        <li><strong>Hardware:</strong> the existing prototypes, ESP32 with an I2C MEMS mic and a DAC, in laser-cut enclosures branded for the Tree Streets Radio Club, the pilot chapter.</li>
+        <li><strong>Inside a house:</strong> walkie-talkies send plain PCM over UDP to the hub on the hub's access point. This replaces the current central UDP server.</li>
+        <li><strong>Between houses, fast links:</strong> the hub carries live push-to-talk over Reticulum's TCP link, where it should feel natural.</li>
+        <li><strong>Between houses, LoRa:</strong> voice degrades to short, heavily compressed clips (Codec2-style, encoded on the hub) or falls back to text. Live chatter over radio isn't realistic.</li>
+        <li><strong>Rollout:</strong> hand them out in small batches to friends on nearby streets, so there's always someone on the other end.</li>
+        <li><strong>Optional phones:</strong> a parent's Android phone running Sideband can join through the hub, without replacing the custom handhelds.</li>
+      </ul>
+
+      <h2 id="voicemail">Hub voicemail</h2>
+      <p>Adding a speaker, a microphone and a couple of buttons to the hub turns it into a voicemail box that works with no screen, no phone and no internet. The RNode's display shows what's waiting, and messages travel as short compressed audio clips, which suits LoRa far better than live voice.</p>
+      <h3>Hardware additions</h3>
+      <ul>
+        <li><strong>Microphone and speaker:</strong> a USB audio adapter is simplest and works on any Pi; an I2S microphone and amplifier board on the GPIO pins is tidier inside an enclosure.</li>
+        <li><strong>Two buttons:</strong> one to play the next message, one to hold while recording a reply.</li>
+        <li><strong>Display:</strong> the RNode's 64×64 framebuffer area, as above.</li>
+      </ul>
+      <h3>How it works</h3>
+      <ol>
+        <li><strong>Receiving:</strong> a voicemail arrives as an LXMF message with an audio clip attached. The hub stores it and the RNode display shows a count, with the sender's name or identicon.</li>
+        <li><strong>Listening:</strong> pressing play plays the oldest unheard message through the speaker and marks it heard.</li>
+        <li><strong>Replying:</strong> holding record captures a clip, which the hub compresses and sends back to the sender's hub.</li>
+        <li><strong>Delivery when someone's offline:</strong> LXMF propagation nodes, such as the community server or chosen hubs, hold messages until the recipient's hub is reachable again.</li>
+      </ol>
+      <h3>Why it fits the radio</h3>
+      <p>A 30-second clip at a Codec2-style 1,200 bits per second is about 4.5 KB, small enough to cross LoRa in reasonable time without hogging the channel. Over fast links the hub can use a higher-quality codec. Store-and-forward also means a voicemail tolerates patchy links that would break a live call.</p>
+      <h3>Who it helps</h3>
+      <p>It gives households without a spare browser device, including older neighbors, a way to send and receive messages. Walkie-talkie users could leave a voicemail for a house that isn't answering live.</p>
+
+      <h2 id="websites">Household websites</h2>
+      <p>Every house can publish a normal HTML and JavaScript site from nginx on its hub, reachable by the rest of the community at a Reticulum address, with no router setup. It works like a Tor onion service: browsers speak ordinary HTTP to a proxy, and the proxy carries requests over Reticulum to the right hub.</p>
+      <h3>Serving side (each hub)</h3>
+      <ol>
+        <li>nginx serves the household's site on <code>localhost:80</code>.</li>
+        <li>A small Reticulum service announces the site's destination and forwards each incoming link to nginx.</li>
+        <li>The site's address is the hash of the hub's identity, so it never changes as long as the identity file is kept.</li>
+      </ol>
+      <h3>Browsing side (each hub)</h3>
+      <ol>
+        <li>The hub also runs an HTTP-over-Reticulum proxy.</li>
+        <li>Household devices get the hub as their proxy automatically, through a PAC file served on the hub's access point. Nobody configures a browser by hand.</li>
+        <li>Ordinary sites go out normally; Reticulum addresses go over Reticulum.</li>
+      </ol>
+      <h3>Names and discovery</h3>
+      <ul>
+        <li>Sites are addressed by hash, such as <code>http://c7258d22a83097b2b60500fe60d1630c</code>, so people need friendly names.</li>
+        <li>The community server hosts a <strong>Beacon Community Network directory</strong> mapping names like <code>garden.beaconny</code> to hashes. The hub's proxy uses that map to resolve names.</li>
+        <li>Hubs can restrict pages to known community identities for neighbors-only content.</li>
+      </ul>
+      <h3>Radio-friendly fallback</h3>
+      <p>When a site is only reachable over LoRa, the hubs switch it from HTML to <strong>Markdown</strong>. A Markdown page is usually a small fraction of the size of its HTML version, with no scripts, stylesheets or fonts, so it fits the radio's few kbps.</p>
+      <ol>
+        <li><strong>Write once, publish twice.</strong> Households write their site in Markdown; the hub's site tool builds the HTML version for nginx and keeps the <code>.md</code> source beside it.</li>
+        <li><strong>The browsing hub picks the format.</strong> Its proxy knows whether the route to a destination runs over a fast link or LoRa. Over LoRa it asks for the Markdown version (an <code>Accept: text/markdown</code> header, or a <code>.md</code> path).</li>
+        <li><strong>The browsing hub renders it.</strong> The proxy turns the Markdown into plain local HTML, so the reader's browser still shows a normal page, just a lighter one.</li>
+        <li><strong>Images become links.</strong> Over LoRa, images are dropped to their alt text plus a link, fetched only if someone asks.</li>
+      </ol>
+      <p>The community-wide essentials (the directory and emergency info) can also be served as Micron pages through a NomadNet node, so they stay readable in NomadNet and MeshChat clients that don't use the proxy.</p>
+      <h3>Starting point</h3>
+      <p>The <a href="https://letsdecentralize.org/tutorials/rns-http.html">letsdecentralize.org guide</a> pairs a Python Reticulum web server (rwebserver) with a browsing proxy, <a href="https://github.com/cotteux/RetiHtmlProxy">RetiHtmlProxy</a>. It serves files itself rather than sitting in front of nginx, so the plan is to fork it so the server side forwards to nginx. Both are small, young projects, so treat them as code to harden, not finished appliance software.</p>
+
+      <h2 id="terminal">Terminal</h2>
+      <p>The terminal is a browser. The hub serves every interface as a local web page, so any device on its access point (an unmodified Chromebook, an old phone, a tablet, a laptop) becomes a terminal with no setup.</p>
+      <ul>
+        <li><strong>Messaging and Micron pages:</strong> Reticulum MeshChat's web interface on the hub.</li>
+        <li><strong>Household websites:</strong> through the hub's proxy, as above.</li>
+        <li><strong>Offline library:</strong> Kiwix serving Wikipedia, repair manuals and local guides.</li>
+        <li><strong>Hub status page:</strong> battery level, which links are up (internet, LoRa), and plain-language warnings for the steward.</li>
+        <li><strong>Why not a Chromebook as the hub:</strong> ChromeOS runs Linux apps in a container that only starts after login, and used models vary too much to standardize. As a terminal, though, a Chromebook is ideal: screen and battery built in, nothing to flash.</li>
+      </ul>
+
+      <h2 id="stewardship">Stewardship</h2>
+      <p>A hub's identity file is its address, so backing it up and handing it over properly matters more than any other steward task. Lose it, and the house's site, messaging address and links all break.</p>
+      <ul>
+        <li><strong>Identity backup:</strong> at setup, copy the identity file to a USB stick kept with the care card, plus an encrypted copy on the community server.</li>
+        <li><strong>One standard image:</strong> every hub boots the same image, and all services start on boot whoever is logged in. A separate everyday user account keeps the stewarding parts out of casual reach.</li>
+        <li><strong>Care card (one page):</strong> what the lights and status page mean, how to restart, how to check the battery, and who to call.</li>
+        <li><strong>Handover guide:</strong> moving a hub to a new steward means moving the identity file, the box and the care card together.</li>
+        <li><strong>Shared knowledge:</strong> a community wiki on the hubs holds the build notes, troubleshooting and the history of each hub.</li>
+      </ul>
+
+      <h2 id="security">Security posture</h2>
+      <p>Treat Reticulum as capable but unaudited software, and design the hub so a bug in any one part can't take over the box. No public CVEs for the reference stack turned up as of November 2026. It has never had an independent security audit, though, and its own README warns it may still contain privacy- or security-breaking bugs.</p>
+      <h3>Where the project stands</h3>
+      <ul>
+        <li><strong>No external audit yet:</strong> a 2024 community effort discussed a review with Trail of Bits, then paused it until the stack matures.</li>
+        <li><strong>Maintainer and licensing changes:</strong> an anti-AI and "no harm" license clause was added in April 2025, and the lead developer stepped back from public engagement in December 2025, though releases continue. The GitHub mirror lags the newest versions, and RetiNet (AGPL) is a community fork of the pre-change code.</li>
+        <li><strong>Ecosystem noise:</strong> the README warns of many LLM-generated fake implementations, guides and apps. Fetching the wrong package is a real risk.</li>
+        <li><strong>Young ports have bugs:</strong> a recent project found microReticulum's HMAC check broken, so packets were dropped while senders saw them as delivered. That was a correctness flaw, not a protocol hole, but it argues for caution with ports.</li>
+      </ul>
+      <h3>Hub hardening</h3>
+      <ul class="check">
+        <li>Install Reticulum only from the reference source or one deliberately chosen fork, and pin the version in the standard image.</li>
+        <li>Run <code>rnsd</code> as an unprivileged user, and give each hub app (web proxy, MeshChat, voicemail) its own user and instance, connected to the primary over a local Backbone interface.</li>
+        <li>Keep nginx, the HTTP proxy and the web interfaces as separate low-privilege services, reachable only on the hub's access point and over Reticulum.</li>
+        <li>Protect community links with interface access codes (IFAC), so outsiders can't join the Beacon Community Network interfaces.</li>
+        <li>Use Reticulum's blackhole management to block misbehaving identities, and consider a shared community blackhole list.</li>
+        <li>Encrypt the off-site identity backups, and store the local copy with the care card, not on the hub.</li>
+        <li>Roll out updates on one test hub first, then to the rest of the community.</li>
+      </ul>
+
+      <h2 id="risks">Risks, limits and open questions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Risk or limit</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>HTTP-over-Reticulum tools are young and small</td><td>Fork, pin versions, keep Micron fallback for essential pages</td></tr>
+            <tr><td>Heavy pages would swamp LoRa</td><td>Route HTTP over fast links only; size warnings in the site editor</td></tr>
+            <tr><td>Browsers mark hash sites "not secure" and may treat hashes as searches</td><td>Explain in the care card; use directory names and the PAC proxy</td></tr>
+            <tr><td>Site JavaScript that calls the outside internet breaks in outages</td><td>Encourage self-contained sites</td></tr>
+            <tr><td>Lost identity file breaks a house's address</td><td>Backup at setup; part of every handover</td></tr>
+            <tr><td>Single radio can't reliably be client and access point</td><td>USB Wi-Fi dongle on every hub</td></tr>
+            <tr><td>Battery hubs run down in long outages</td><td>Solar remains unsolved; size batteries first, solar later</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Open questions:</p>
+      <ul class="check">
+        <li>Which LoRa activation approach keeps the radio quietest in normal times?</li>
+        <li>Which USB Wi-Fi chipset is the standard?</li>
+        <li>RTC module or GPS for timekeeping?</li>
+        <li>Battery size and runtime target per hub?</li>
+        <li>Live push-to-talk between houses: what latency is acceptable over the internet link?</li>
+      </ul>
+
+      <h2 id="build-order">Suggested build order</h2>
+      <p>Start with the hub's own access point and battery, because that decides whether a power outage breaks things before the internet even matters.</p>
+      <ol>
+        <li><strong>Hub access point plus battery:</strong> a repurposed Pi, USB Wi-Fi dongle, battery; walkie-talkies talk to the hub with the home router switched off.</li>
+        <li><strong>Hubs linked over the internet:</strong> two hubs connected through the community server with Reticulum TCP; walkie-talkie voice between houses.</li>
+        <li><strong>LoRa fallback:</strong> add RNodes, test failover and how chatty an idle network is on the radio.</li>
+        <li><strong>Household websites:</strong> nginx plus the forked web server and proxy, the PAC file, and the directory.</li>
+        <li><strong>Markdown fallback:</strong> build both formats, then switch by link type.</li>
+        <li><strong>Terminal and library:</strong> MeshChat, Kiwix and the status page in the browser.</li>
+        <li><strong>Stewardship kit:</strong> standard image, identity backup, care card and handover guide; first hubs out to Tree Streets families as the pilot chapter.</li>
+      </ol>
+
+      <h2 id="sources">Sources</h2>
+      <ul>
+        <li><a href="https://letsdecentralize.org/tutorials/rns-http.html">Setting up a website over Reticulum – letsdecentralize.org</a></li>
+        <li><a href="https://github.com/cotteux/RetiHtmlProxy">RetiHtmlProxy – GitHub</a></li>
+        <li><a href="https://git.hackliberty.org/Git-Mirrors/Reticulum/commit/b0ef58e5ca5866d1241234c08e9b1bcdcf67d692">Reticulum RNodeInterface external framebuffer commit</a></li>
+        <li><a href="https://git.quad4.io/Reticulum/columba/src/commit/d75bd2d77f2dc738a154f1e6fc6da134a98f9f05/python/rnode_interface.py">Columba rnode_interface.py</a></li>
+        <li><a href="https://git.rns.moscow/deuxyeux/RNode_Firmware/raw/commit/f76ff8254dcc417e0202886e31cf36a5255565bd/README.md">RNode Firmware README</a></li>
+        <li><a href="https://github.com/markqvist/reticulum">markqvist/Reticulum README</a></li>
+        <li><a href="https://github.com/markqvist/Reticulum/discussions/628">Security audit of Reticulum+LXMF, Discussion #628</a></li>
+        <li><a href="https://fosdem.org/2026/events/attachments/9NCWUR-reticulum_community_meetup_implementations_migration_and_future/slides/267005/reticulum_dimz1j8.pdf">FOSDEM 2026 Reticulum community meetup slides</a></li>
+        <li><a href="https://github.com/zerokelvin-dev/solar_os/pull/6">solar_os PR #6 (microReticulum HMAC fix)</a></li>
+        <li><a href="https://reticulum.miraheze.org/wiki/RNS">Reticulum Community Wiki: RNS</a></li>
+        <li><a href="https://reticulum.network/manual/Reticulum%20Manual.pdf">Reticulum Manual 1.5.5</a></li>
+      </ul>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        Part of <a href="https://beaconny.net/">Beacon Community Network</a> · <a href="../../">More AI projects</a>
+      </div>
+    </footer>
+  </body>
+</html>
