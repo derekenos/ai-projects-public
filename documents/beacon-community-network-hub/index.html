@@ -199,6 +199,7 @@
           <li><a href="#voicemail">Hub voicemail</a></li>
           <li><a href="#websites">Household websites</a></li>
           <li><a href="#terminal">Terminal</a></li>
+          <li><a href="#game-machine">Hub as a game machine</a></li>
           <li><a href="#stewardship">Stewardship</a></li>
           <li><a href="#remote-isolation">Remote isolation</a></li>
           <li><a href="#security">Security posture</a></li>
@@ -353,6 +354,32 @@
         <li><strong>Offline library:</strong> Kiwix serving Wikipedia, repair manuals and local guides.</li>
         <li><strong>Hub status page:</strong> battery level, which links are up (internet, LoRa), and plain-language warnings for the steward.</li>
         <li><strong>Why not a Chromebook as the hub:</strong> ChromeOS runs Linux apps in a container that only starts after login, and used models vary too much to standardize. As a terminal, though, a Chromebook is ideal: screen and battery built in, nothing to flash.</li>
+      </ul>
+
+      <h2 id="game-machine">Hub as a game machine</h2>
+      <p>The first form factor of the hub could be an arcade-style game machine that plays community-made games available only on the Beacon Community Network. That makes the hub something households want on an ordinary day, keeps it plugged in and cared for, and gives people a reason to join that has nothing to do with emergencies.</p>
+      <h3>Building on existing work</h3>
+      <ul>
+        <li><strong>Controls:</strong> the <a href="https://derekenos.com/project-cardboard-boxcade">Cardboard Boxcade</a> pattern, household switches and knobs wired to an ESP32 that sends input changes over Wi-Fi. Pointed at the hub's access point, the controls become another household Wi-Fi client, like the walkie-talkies.</li>
+        <li><strong>Wired controls:</strong> when the Pi sits inside the cabinet, buttons, joysticks, switches and knobs can wire straight to its GPIO pins, with no ESP32, battery or Wi-Fi in between. A small input service turns them into a standard gamepad device, so any game reads them like a normal controller. Analog knobs need an ADC board, since the Pi has no analog inputs. Alternatively, a small microcontroller (an RP2040 or ESP32, say) can read all the controls, including analog ones, and report them to the Pi over I2C, SPI, UART or USB. That keeps button debouncing and timing off the Pi, needs fewer GPIO pins, and makes the control panel a swappable module. Over USB it can even present itself as a standard gamepad, with no input service needed. Wi-Fi controllers remain the choice for separate or handheld controls.</li>
+        <li><strong>Cabinets:</strong> low-cost cardboard or laser-cut enclosures, following the Boxcade and the <a href="https://derekenos.com/project-modular-arcade-cabinet">Modular Arcade Cabinet</a>, built around a repurposed Pi and an old screen or tablet.</li>
+        <li><strong>Games:</strong> Godot games like those on <a href="../../">AI Projects</a>. Main Drag Beacon, a game set in Beacon, is a natural first network exclusive.</li>
+        <li><strong>Physical games:</strong> the cardboard Skee-ball machine (ESP32, coin acceptor switches behind the holes, NeoPixel strips and a Fire tablet scoreboard) shows the same pattern works for games that aren't on a screen.</li>
+      </ul>
+      <h3>What makes the games network-only</h3>
+      <ul>
+        <li><strong>Distributed only on the network:</strong> games are published to hubs over Reticulum, so the way to play is to join. Public sites can show them off without hosting them.</li>
+        <li><strong>Play between houses:</strong> stations in different homes make up one game, like a spaceship crew where each house runs a different panel. Game state is tiny, so co-op and turn-based play can work over LoRa; fast action needs the internet link.</li>
+        <li><strong>Neighborhood leaderboards:</strong> arcade and Skee-ball scores shared across the network, so the Tree Streets high score is real and local. A score is a few bytes and travels fine over radio.</li>
+        <li><strong>Community-designed:</strong> neighbors, and especially kids, make games and levels, with AI help where it's useful. Game jams fit the Beacon Future Forum and the <a href="https://irl.beaconny.net/">Interface Research Lab</a> proposal.</li>
+        <li><strong>Beacon tokens:</strong> coin acceptors can take Beacon Community Network tokens, a fun detail and a souvenir for chapter members.</li>
+      </ul>
+      <h3>Design constraints</h3>
+      <ul>
+        <li><strong>Pi performance:</strong> Godot web exports run poorly in a Pi's browser. The realistic route is a native ARM64 Linux export using the Compatibility renderer on a Pi 4 or 5. Heavier 3D games may still struggle, so test one on a Pi early. The fallback is the Boxcade setup: the hub serves the game, and a tablet or Chromebook in the cabinet plays it.</li>
+        <li><strong>Signed games only:</strong> games are code arriving over the network, so hubs only run games signed with the network's key.</li>
+        <li><strong>Sandboxed:</strong> games run as an unprivileged user, apart from the hub services, so a buggy or malicious game can't touch Reticulum, messaging or the isolation switch.</li>
+        <li><strong>Hub duties first:</strong> messaging, voicemail and isolation stay responsive while a game runs, and games switch off in an outage to save battery.</li>
       </ul>
 
       <h2 id="stewardship">Stewardship</h2>
