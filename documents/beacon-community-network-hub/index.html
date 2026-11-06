@@ -200,6 +200,7 @@
           <li><a href="#websites">Household websites</a></li>
           <li><a href="#terminal">Terminal</a></li>
           <li><a href="#stewardship">Stewardship</a></li>
+          <li><a href="#remote-isolation">Remote isolation</a></li>
           <li><a href="#security">Security posture</a></li>
           <li><a href="#risks">Risks, limits and open questions</a></li>
           <li><a href="#build-order">Suggested build order</a></li>
@@ -362,6 +363,48 @@
         <li><strong>Care card (one page):</strong> what the lights and status page mean, how to restart, how to check the battery, and who to call.</li>
         <li><strong>Handover guide:</strong> moving a hub to a new steward means moving the identity file, the box and the care card together.</li>
         <li><strong>Shared knowledge:</strong> a community wiki on the hubs holds the build notes, troubleshooting and the history of each hub.</li>
+      </ul>
+
+      <h2 id="remote-isolation">Remote isolation</h2>
+      <p>In an emergency, such as a widespread AI-driven command-and-control operation, a network administrator can remotely take hubs off the communications grid. Remote commands can only reduce connectivity; restoring it always takes an action at the hub itself. A stolen or forged command can therefore cause an outage, but can never reopen a hub that was deliberately isolated.</p>
+      <h3>Isolation levels</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Level</th><th>What goes off</th><th>What stays on</th></tr></thead>
+          <tbody>
+            <tr><td style="white-space: nowrap">Off-Grid+</td><td>Internet uplink: the hub's link to home Wi-Fi and its Reticulum TCP interface</td><td>The hub's own access point, LoRa</td></tr>
+            <tr><td>Off-Grid</td><td>Off-Grid+, plus the hub's access point and Bluetooth</td><td>LoRa</td></tr>
+            <tr><td>Dark</td><td>Everything, including LoRa</td><td>Nothing; restore only at the hub</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Off-Grid+ and Off-Grid keep LoRa running, so the neighborhood network keeps working and further commands can still arrive. Dark is the last resort.</p>
+      <h3>How a command works</h3>
+      <ol>
+        <li><strong>Signed message:</strong> the administrator sends a small isolation command over Reticulum, signed with a dedicated Ed25519 key kept offline and separate from any everyday identity. Every hub image carries the matching public key.</li>
+        <li><strong>Any path:</strong> commands arrive over the internet link or over LoRa, so they still get through if the internet link is the problem.</li>
+        <li><strong>No replays:</strong> each command carries a sequence number and a target (one hub's hash, or all hubs). Hubs reject any sequence number they have already seen; sequence numbers avoid relying on hub clocks.</li>
+        <li><strong>Separate enforcer:</strong> a tiny root-owned service, apart from <code>rnsd</code> and the web services, verifies the signature and applies the level with <code>rfkill</code> and the network tools. A bug in the other services can't trigger it.</li>
+        <li><strong>Escalation only:</strong> a command can move a hub to a stricter level, never a looser one.</li>
+      </ol>
+      <h3>Restoring</h3>
+      <ul>
+        <li>A steward restores the hub on site, with a physical button or by confirming on the local status page.</li>
+        <li>A hub in Dark can only be restored with the physical button, since it has no radios on.</li>
+        <li>Remote restore may come later, but only with stronger controls, such as two separate keys agreeing.</li>
+      </ul>
+      <h3>Rules for stewards and households</h3>
+      <ul>
+        <li>The switch only controls the hub's own radios and links. It never touches the household's router or other devices.</li>
+        <li>The RNode display and status page show the current level plainly, with who sent the command and when.</li>
+        <li>Nothing stops a steward from unplugging the hub, and stewards agree to the feature before hosting one.</li>
+        <li>Bluetooth is off in the standard image (<code>dtoverlay=disable-bt</code>) unless something needs it, so it's never an exposure in normal times.</li>
+      </ul>
+      <h3>Key custody</h3>
+      <ul>
+        <li>Initially one administrator holds the signing key. That's a single point of failure, both if the key is stolen and if the holder is unavailable.</li>
+        <li>Keep an encrypted offline backup of the key from day one.</li>
+        <li>Later, move to a small group of trusted stewards, any one of whom can trigger isolation, since isolation is low-risk to trigger.</li>
       </ul>
 
       <h2 id="security">Security posture</h2>
