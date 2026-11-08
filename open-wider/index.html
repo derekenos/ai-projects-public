@@ -92,7 +92,23 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="Open Wider.icon.png" />
 <link rel="apple-touch-icon" href="Open Wider.apple-touch-icon.png"/>
-
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script>
+// Phones: the first tap goes fullscreen (and landscape, where allowed). It has to
+// happen inside the tap itself, which is why it is here and not in the game.
+// iPhones do not allow it: Add to Home Screen opens without the browser bar.
+document.addEventListener('touchend', function () {
+  var el = document.documentElement;
+  var go = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (!go || document.fullscreenElement || document.webkitFullscreenElement) return;
+  var p = go.call(el, { navigationUI: 'hide' });
+  if (p && p.then) p.then(function () {
+    if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(function () {});
+  }).catch(function () {});
+}, { once: true });
+</script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -111,7 +127,7 @@ body {
 
 		<script src="Open Wider.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"Open Wider","experimentalVK":false,"fileSizes":{"Open Wider.pck":443024,"Open Wider.wasm":37902138},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"Open Wider","experimentalVK":false,"fileSizes":{"Open Wider.pck":442832,"Open Wider.wasm":37902138},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
